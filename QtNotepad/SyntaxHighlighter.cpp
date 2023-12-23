@@ -39,7 +39,7 @@ SyntaxHighlighter::SyntaxHighlighter(const QString& str, QTextDocument* parent, 
                             }
                         }
                         auto first = root.elementsByTagName("startComment").item(0).toElement();
-                        auto last = root.elementsByTagName("startComment").item(0).toElement();
+                        auto last = root.elementsByTagName("endComment").item(0).toElement();
                         QString firstNode = first.elementsByTagName("pattern").at(0).toElement().attribute("value");
                         QString lastNode = last.elementsByTagName("pattern").at(0).toElement().attribute("value");
 
