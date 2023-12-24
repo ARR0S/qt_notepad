@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>icon.ico</file>
+        <file>new_file.png</file>
+        <file>open_file.png</file>
+        <file>save_all_files.png</file>
+        <file>save_file.png</file>
+    </qresource>
+    <qresource prefix="/settings">
+        <file>styles.xml</file>
+    </qresource>
+</RCC>
