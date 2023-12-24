@@ -16,6 +16,7 @@ QtNotepad::QtNotepad(QWidget * parent) : QMainWindow(parent)
     setCentralWidget(tabWgt);
     label = new QLabel(this);
     statusBar()->addPermanentWidget(label);
+    loadSettings();
 }
 
 void QtNotepad::closeEvent(QCloseEvent* event)
@@ -41,6 +42,7 @@ void QtNotepad::closeEvent(QCloseEvent* event)
         event->accept();
         delete dialog;
     }
+    saveSettings();
 }
 
 
@@ -236,7 +238,7 @@ void QtNotepad::openFile(const QString& path)
         tabWgt->setCurrentIndex(index);
         tabWgt->setTabWhatsThis(index, "Without changes");
         tabWgt->setTabToolTip(index, path);
-
+        tabWgt->repaint();
         QListWidgetItem* item = new QListWidgetItem;
         item->setText(tabWgt->tabText(index));
         item->setToolTip(tabWgt->tabToolTip(index));
@@ -454,26 +456,50 @@ void QtNotepad::copy()
 
 void QtNotepad::cut()
 {
-    Editor* editor = qobject_cast<Editor*>(tabWgt->currentWidget());
-    editor->cut();
+    if (Editor* editor = qobject_cast<Editor*>(tabWgt->currentWidget()))
+    {
+        editor->cut();
+    }
+    else
+    {
+        qDebug() << "Error in casting";
+    }
 }
 
 void QtNotepad::selectAll()
 {
-    Editor* editor = qobject_cast<Editor*>(tabWgt->currentWidget());
-    editor->copy();
+    if (Editor* editor = qobject_cast<Editor*>(tabWgt->currentWidget()))
+    {
+        editor->copy();
+    }
+    else
+    {
+        qDebug() << "Error in casting";
+    }
 }
 
 void QtNotepad::paste()
 {
-    Editor* editor = qobject_cast<Editor*>(tabWgt->currentWidget());
-    editor->paste();
+    if (Editor* editor = qobject_cast<Editor*>(tabWgt->currentWidget()))
+    {
+        editor->paste();
+    }
+    else
+    {
+        qDebug() << "Error in casting";
+    }
 }
 
 void QtNotepad::clear()
 {
-    Editor* editor = qobject_cast<Editor*>(tabWgt->currentWidget());
-    editor->clear();
+    if (Editor* editor = qobject_cast<Editor*>(tabWgt->currentWidget()))
+    {
+        editor->clear();
+    }
+    else
+    {
+        qDebug() << "Error in casting";
+    }
 }
 
 SaveDialog* QtNotepad::createDialog()
@@ -537,3 +563,23 @@ void QtNotepad::statusBarChange() {
         .arg((curr->cursorRect().left() - 3) / 4 + 1));
 }
 
+void QtNotepad::saveSettings() {
+    QSettings settings("Company", "QtNotepad");
+    QStringList openedTabs;
+    for (int i = 0; i < tabWgt->count(); ++i) {
+        if (tabWgt->tabToolTip(i) != "")
+            openedTabs << tabWgt->tabToolTip(i);
+    }
+
+    settings.setValue("OpenedTabs", openedTabs);
+}
+
+void QtNotepad::loadSettings() {
+    QSettings settings("Company", "QtNotepad");
+    QStringList openedTabs = settings.value("OpenedTabs").toStringList();
+    for (const QString& filePath : openedTabs) {
+        openFile(filePath);
+        tabWgt->setCurrentIndex(0);
+    }
+
+}

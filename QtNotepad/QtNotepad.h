@@ -34,6 +34,7 @@
 #include <QMenuBar>
 #include <QPushButton>
 #include <QStatusBar>
+#include <QSettings>
 
 class SaveDialog;
 
@@ -77,6 +78,10 @@ private:
 
     SaveDialog* createDialog();
     void statusBarChange();
+
+    void saveSettings();
+
+    void loadSettings();
 
 protected:
     virtual void closeEvent(QCloseEvent*) override;
